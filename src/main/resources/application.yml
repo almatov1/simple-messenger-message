@@ -1,0 +1,25 @@
+server:
+  port: 0
+spring:
+  application:
+    name: message
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8443/realms/development
+        opaquetoken:
+          client-id: SpringKeycloakSecurity
+          client-secret: CBcGD21ehXdvNaot2ZKEhNGoCKsRFyBw
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/db_message
+    username: root
+    password: password
+  flyway:
+    url: jdbc:postgresql://localhost:5432/db_message
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://root:password@localhost:8761/eureka
