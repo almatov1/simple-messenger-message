@@ -37,7 +37,6 @@ public class SecurityConfig {
                         exchanges -> exchanges
                                 .pathMatchers("/api/v1/health").permitAll()
                                 .pathMatchers(HttpMethod.POST, "/api/v1/message").authenticated()
-                                .pathMatchers(HttpMethod.DELETE, "/api/v1/message").hasRole("ADMIN")
                 );
 
         return httpSecurity.build();

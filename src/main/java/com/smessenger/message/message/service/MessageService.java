@@ -1,10 +1,13 @@
 package com.smessenger.message.message.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smessenger.message.message.dao.DeleteMessageResponseDao;
 import com.smessenger.message.message.dao.PostMessageDao;
 import com.smessenger.message.message.entity.Message;
 import com.smessenger.message.message.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
@@ -26,7 +30,18 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public Mono<String> deleteMessage(Authentication authentication) {
-        return Mono.just("Hello admin, " + authentication.getName());
+    public Mono<Void> deleteMessage(String message) {
+        log.info("message: ${}", message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        log.info("objectMapper created");
+        try {
+            DeleteMessageResponseDao deleteMessageResponseDao = objectMapper.readValue(message, DeleteMessageResponseDao.class);
+            log.info("message id: ${}", deleteMessageResponseDao.getMessageId());
+            String messageId = deleteMessageResponseDao.getMessageId();
+            return messageRepository.deleteAll();
+        } catch (JsonProcessingException e) {
+            log.error("json problem");
+            return Mono.error(e);
+        }
     }
 }

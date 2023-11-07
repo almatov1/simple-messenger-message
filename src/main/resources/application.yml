@@ -17,6 +17,8 @@ spring:
     password: password
   flyway:
     url: jdbc:postgresql://localhost:5432/db_message
+  kafka:
+    bootstrap-servers: localhost:9092
 eureka:
   client:
     register-with-eureka: true
