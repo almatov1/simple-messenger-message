@@ -7,7 +7,7 @@ import com.smessenger.message.shared.controller.MainController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class MessageController extends MainController {
         return messageService.insertMessage(principal, postMessageDao);
     }
 
-    @KafkaListener(topics = "messageTopic2", groupId = "msg")
+    @RabbitListener(queues = "messages")
     public void deleteMessage(String message) {
         messageService.deleteMessage(message).subscribe();
     }
