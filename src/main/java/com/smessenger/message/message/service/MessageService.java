@@ -34,14 +34,16 @@ public class MessageService {
         log.info("message: ${}", message);
         ObjectMapper objectMapper = new ObjectMapper();
         log.info("objectMapper created");
+        DeleteMessageResponseDao deleteMessageResponseDao;
         try {
-            DeleteMessageResponseDao deleteMessageResponseDao = objectMapper.readValue(message, DeleteMessageResponseDao.class);
-            log.info("message id: ${}", deleteMessageResponseDao.getMessageId());
-            String messageId = deleteMessageResponseDao.getMessageId();
-            return messageRepository.deleteAll();
+            deleteMessageResponseDao = objectMapper.readValue(message, DeleteMessageResponseDao.class);
         } catch (JsonProcessingException e) {
             log.error("json problem");
             return Mono.error(e);
         }
+
+        log.info("message id: ${}", deleteMessageResponseDao.getMessageId());
+        String messageId = deleteMessageResponseDao.getMessageId();
+        return messageRepository.deleteById(messageId);
     }
 }

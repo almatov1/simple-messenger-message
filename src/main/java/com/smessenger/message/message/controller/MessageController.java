@@ -27,8 +27,7 @@ public class MessageController extends MainController {
     }
 
     @KafkaListener(topics = "messageTopic2", groupId = "msg")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ADMIN') or principal.authorities.")
-    public Mono<Void> deleteMessage(String message) {
-        return messageService.deleteMessage(message);
+    public void deleteMessage(String message) {
+        messageService.deleteMessage(message).subscribe();
     }
 }
